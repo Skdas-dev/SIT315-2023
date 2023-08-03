@@ -1,1 +1,43 @@
+//setup pins and motion indication status
+const uint8_t pir = 2;
+const uint8_t led = 13;
+volatile int motion = LOW;
 
+
+void setup()
+{
+  //setup min modes
+  pinMode(led, OUTPUT);
+  Serial.begin(9600);
+  
+  //attach interrupt to pir pin
+  attachInterrupt(digitalPinToInterrupt(pir), pirInterrupt, CHANGE);
+}
+
+
+void loop()
+{
+  //no code for loop as we are using interrupts
+}
+
+void pirInterrupt()
+{
+  //update and print motion status
+  motion = digitalRead(pir);
+  Serial.println(motion);
+  
+  //turn led on or off depending on motion infront of pir
+  if (motion == HIGH)
+  {
+    digitalWrite(led,HIGH);
+  }else
+  {
+    digitalWrite(led, LOW);
+  }
+  delay(200);
+}
+
+//Sources
+//Anon, (2018). ESP32 with PIR Motion Sensor using Interrupts and Timers | Random Nerd Tutorials. [online] Available at: https://randomnerdtutorials.com/esp32-pir-motion-sensor-interrupts-timers/. [Accessed 2 Aug. 2023].
+//Maker Portal. (2022). Arduino Interrupts with PIR Motion Sensor. [online] Available at: https://makersportal.com/blog/2019/5/27/arduino-interrupts-with-pir-motion-detector#:~:text=When%20the%20PIR%20sensor%20is [Accessed 2 Aug. 2023].
+//www.youtube.com. (n.d.). Level Up Your Arduino Code: External Interrupts. [online] Available at: https://www.youtube.com/watch?v=J61_PKyWjxU&ab_channel=SparkFunElectronics [Accessed 3 Aug. 2023].
